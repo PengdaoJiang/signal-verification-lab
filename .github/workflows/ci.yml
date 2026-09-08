@@ -1,0 +1,37 @@
+name: Verify DSP and portable RTL
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+      - name: Compile the C implementation
+        run: |
+          mkdir -p build
+          cc -std=c11 -Wall -Wextra -Werror -O2 -fPIC -shared src/fir_q15.c -o build/libfir_q15.so
+      - name: Test Python and the compiled C library
+        env:
+          SIGNAL_FIR_LIBRARY: ${{ github.workspace }}/build/libfir_q15.so
+        run: python -m unittest discover -s tests -v
+      - name: Produce an actual verification receipt
+        run: python verify.py --library build/libfir_q15.so --out verification-output
+      - name: Install open-source RTL simulator
+        run: sudo apt-get update && sudo apt-get install -y iverilog
+      - name: Run vendor-independent CRC testbench
+        run: |
+          iverilog -g2012 -s tb_link_crc32c -o build/crc.vvp rtl/common/link_crc32c.sv tb/tb_link_crc32c.sv
+          vvp build/crc.vvp | tee build/crc.log
+          python -c "from scripts.run_rtl import valid_result; from pathlib import Path; assert valid_result(Path('build/crc.log').read_text(), 'tb_link_crc32c')"
