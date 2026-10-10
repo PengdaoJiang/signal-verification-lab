@@ -77,3 +77,7 @@ Repository-authored source: [MIT](LICENSE). External XPM, device primitives, too
 ## Stateful streaming and ownership
 
 The [queue/credit subsystem](streaming/README.md) adds real stateful request, completion, cancellation and two-endpoint modeling to the signal-verification examples. Geometry-level design verification is available separately in [pcb-geometry-evidence](https://github.com/PengdaoJiang/pcb-geometry-evidence).
+
+## Verifiable EDA task records
+
+The [evaluation protocol](docs/eda-evaluation-protocol.md) maps the existing RTL and trusted benches to a machine-readable task taxonomy, engineering-complexity tiers and scoped acceptance rules. The [receipt exporter](evaluation/export_results.py) emits source/log-bound JSONL, retaining missing evidence and separating behavioral outcomes from unavailable process or physical metrics. It is an inspectable evaluation seed, not a claim of model training or benchmark performance.

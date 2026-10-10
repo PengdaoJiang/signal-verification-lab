@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "scope": "behavioral_rtl_verification",
+  "difficulty_basis": "Engineering complexity, not calibrated model pass rates: L1 single datapath; L2 state and fault handling; L3 multi-clock or segmented integration.",
+  "template": {
+    "task_type": "diagnose_and_repair",
+    "input": "The named interface/implementation, its trusted self-checking testbench, and any failing log from the candidate run.",
+    "deliverable": "A patch to implementation files, a concise failure explanation, and a fresh source-bound simulation receipt.",
+    "fixed_evaluator": "Do not edit the testbench, runner, completion marker, or acceptance thresholds to obtain a pass.",
+    "evaluation": "The trusted runner checks tool completion; the exporter validates receipt/source/log integrity and the bench outcome. Physical metrics and process rewards are separate and unavailable in this receipt format."
+  },
+  "tasks": [
+    {
+      "id": "tb_link_crc32c",
+      "title": "CRC32C byte ordering and known-answer verification",
+      "category": "datapath.arithmetic.crc",
+      "difficulty": "L1",
+      "specification": "Preserve the CRC update interface and produce the expected CRC for the independent known-answer vector.",
+      "oracle_anchors": ["CRC32C KAT mismatch"],
+      "failure_labels": ["arithmetic_mismatch", "initialization_or_ordering"]
+    },
+    {
+      "id": "tb_link_clock_oe",
+      "title": "Clock ownership, safety stop and explicit re-arm",
+      "category": "control.clock_reset",
+      "difficulty": "L2",
+      "specification": "Keep complete clock pulses under normal start/stop phase variation; safety stop forces high impedance, and clearing it cannot enable output without a fresh arm.",
+      "oracle_anchors": ["runt low pulse", "runt high pulse", "kill clear enabled without fresh arm"],
+      "failure_labels": ["pulse_integrity", "unsafe_state_transition", "stale_arm"]
+    },
+    {
+      "id": "tb_link_endpoint",
+      "title": "Validate a frame before publishing payload",
+      "category": "protocol.validation_commit",
+      "difficulty": "L2",
+      "specification": "Deliver the expected payload for valid frames, reject CRC/sequence faults without publishing their payload, and abort an in-flight transfer on reset.",
+      "oracle_anchors": ["sequence-error frame committed payload", "corrupt frame committed payload", "mid-transaction reset failed to abort TX"],
+      "failure_labels": ["payload_mismatch", "premature_commit", "reset_abort"]
+    },
+    {
+      "id": "tb_link_composed",
+      "title": "Full-duplex multi-clock endpoint integration",
+      "category": "integration.multiclock_streaming",
+      "difficulty": "L3",
+      "specification": "Preserve byte-exact bidirectional transfers and frame accounting across the composed clock domains and configured buffering.",
+      "oracle_anchors": ["A receive mismatch", "B receive mismatch", "frame count mismatch", "composed timeout"],
+      "failure_labels": ["cross_domain_data_mismatch", "accounting_mismatch", "liveness_timeout"]
+    },
+    {
+      "id": "tb_finite_stream_engine",
+      "title": "Segmented packet ownership and halt/resume",
+      "category": "protocol.segmented_backpressure",
+      "difficulty": "L3",
+      "specification": "Respect packet boundaries and segmented offsets; a falling-ready halt and later resume must neither replay nor lose a transmitted word. Preserve the atomic management interface.",
+      "oracle_anchors": ["CMAC_HALT_WITHDRAW", "CMAC_HALT_RESUME_REPLAY"],
+      "failure_labels": ["packet_boundary", "word_replay_or_loss", "terminal_error_handling"]
+    }
+  ]
+}
