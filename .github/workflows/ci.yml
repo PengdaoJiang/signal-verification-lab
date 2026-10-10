@@ -28,6 +28,8 @@ jobs:
         run: python -m unittest discover -s tests -v
       - name: Produce an actual verification receipt
         run: python verify.py --library build/libfir_q15.so --out verification-output
+      - name: Verify stateful queue and credit invariants
+        run: python -m unittest discover -s streaming -p "test_*.py" -v
       - name: Install open-source RTL simulator
         run: sudo apt-get update && sudo apt-get install -y iverilog
       - name: Run vendor-independent CRC testbench

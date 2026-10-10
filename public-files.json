@@ -1,16 +1,16 @@
 {
-  "release": "2026-09-source-derived",
-  "scope": "source_derived_datapaths_and_simulation",
+  "release": "2026-10-source-derived",
   "files": [
     ".github/workflows/ci.yml",
     ".gitignore",
-    "docs/rtl-architecture.md",
+    "LICENSE",
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
     "docs/engineering-cases.md",
+    "docs/rtl-architecture.md",
     "docs/validation.md",
     "docs/verification-design.md",
-    "LICENSE",
     "public-files.json",
-    "README.md",
     "reference.py",
     "rtl/common/link_async_fifo.sv",
     "rtl/common/link_clock_oe.sv",
@@ -24,6 +24,11 @@
     "scripts/run_all.tcl",
     "scripts/run_rtl.py",
     "src/fir_q15.c",
+    "streaming/README.md",
+    "streaming/host_pair.py",
+    "streaming/queue_service.py",
+    "streaming/service_check.py",
+    "streaming/test_streaming.py",
     "tb/tb_finite_stream_engine.sv",
     "tb/tb_link_clock_oe.sv",
     "tb/tb_link_composed.sv",
@@ -31,7 +36,6 @@
     "tb/tb_link_endpoint.sv",
     "tests/test_rtl_runner.py",
     "tests/test_signal.py",
-    "THIRD_PARTY_NOTICES.md",
     "verify.py"
   ]
 }

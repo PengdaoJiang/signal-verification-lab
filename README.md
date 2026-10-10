@@ -73,3 +73,7 @@ Private protocol documents/photos, board topology, pin constraints, IP output pr
 ## License
 
 Repository-authored source: [MIT](LICENSE). External XPM, device primitives, tools and GitHub Actions retain their own licenses; see [third-party notices](THIRD_PARTY_NOTICES.md). The [FIR verification design](docs/verification-design.md) covers the numerical example.
+
+## Stateful streaming and ownership
+
+The [queue/credit subsystem](streaming/README.md) adds real stateful request, completion, cancellation and two-endpoint modeling to the signal-verification examples. Geometry-level design verification is available separately in [pcb-geometry-evidence](https://github.com/PengdaoJiang/pcb-geometry-evidence).
