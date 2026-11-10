@@ -1,5 +1,7 @@
 # Signal Verification Lab
 
+Historical reference for communication data paths and numerical verification. The retained source, licenses and reproduction guides remain available; this repository is no longer a primary project entry point.
+
 A source-derived **FPGA data-path and DSP verification** project: frame-level acceptance, clock-domain boundaries, finite full-duplex capture, and independent numerical checks.
 
 The RTL and self-checking testbenches come from an existing engineering project. The repository focuses on the hardware-independent datapaths: how accepted data moves across clock domains, packet boundaries and backpressure without admitting corrupt frames or replaying words. Board wiring, constraints, vendor IP and programming scripts are outside the source release.
